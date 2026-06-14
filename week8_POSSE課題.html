@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>チームメンバー一覧</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'dela-gothic': ['"Dela Gothic One"', 'Dancing Script'],
+                        'dancing': ['"Dancing Script"', 'cursive'],
+                        'noto': ['"Noto Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Dela+Gothic+One&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  </head>
+
+  <body class="bg-gray-100">
+    <header class="flex justify-between items-center bg-white rounded-xl sticky top-0 z-50 px-10 h-20 mb-6">
+      <h1 class="font-dancing text-4xl font-bold">Team Member</h1>
+      <div class="flex gap-6">
+        <button id="All" class="font-dancing bg-gray-500 text-2xl rounded-xl text-white px-6 py-1 font-bold">All</button>
+        <button id="Engineer" class="font-dancing bg-gray-500 text-2xl rounded-xl text-white px-6 py-1 font-bold">Engineer</button>
+        <button id="Designer" class="font-dancing bg-gray-500 text-2xl rounded-xl text-white px-6 py-1 font-bold">Designer</button>
+        <button id="Manager" class="font-dancing bg-gray-500 text-2xl rounded-xl text-white px-6 py-1 font-bold">Manager</button>
+      </div>
+    </header>
+    <div id="memberList" class="grid gap-4 px-8"></div>
+
+    <script>
+      const members = [
+        { name: "田中太郎", role: "デザイナー",                     category:"デザイナー",     comment: "UIにこだわっています" },
+        { name: "鈴木花子", role: "エンジニア",                     category:"エンジニア",     comment:"バックエンドが得意です" },
+        { name: "佐藤次郎", role: "PdM",                           category:"マネージャー",   comment: "ユーザー視点を大切に" },
+        { name: "吉田湊", role: "デザインマネージャー",              category:"マネージャー",   comment: "ユニバーサルデザインを心がけています" },
+        { name: "伊織アレクサンドル", role: "フロントエンドエンジニア",category:"エンジニア",    comment: "積極的に多言語対応を実装します" },
+      ];
+
+      const memberList = document.getElementById("memberList");
+
+      // 1. 渡された配列データをもとに画面を描き直す関数（render）を作る
+      // 前回の「古い表示をリセット（innerHTML = ""）」する処理もここに入っています
+      function render(data) {
+        memberList.innerHTML = '';
+
+        data.forEach((member) => {
+          const card = document.createElement("div");
+          card.className = "bg-white rounded-xl shadow-sm p-5 border border-gray-100 flex flex-col justify-between";
+
+          card.innerHTML = `
+            <div>
+              <h2 class="text-lg font-bold text-gray-800">${member.name}</h2>
+              <p class="text-blue-600 text-sm mt-0.5">${member.role}</p>
+            </div>
+            <p class="text-gray-600 text-sm mt-3 border-t border-gray-50 pt-2">${member.comment}</p>
+          `;
+
+          memberList.appendChild(card);
+        });
+      }
+
+      // 2. 各ボタンをクリックしたときの絞り込み処理
+
+      // 【All】全員を表示する
+      document.querySelector("#All").addEventListener("click", () => {
+        render(members); // 元の5人全員の配列をそのまま渡す
+      });
+
+      // 【Engineer】エンジニアだけで絞り込む
+      document.querySelector("#Engineer").addEventListener("click", () => {
+        const engineers = members.filter((member) => {
+          // 「フロントエンド〜」も拾えるように「member.category」で判定します
+          return member.category === "エンジニア";
+        });
+        render(engineers); // 絞り込んだ結果を関数に渡して画面を更新
+      });
+
+      // 【Designer】デザイナーだけで絞り込む
+      document.querySelector("#Designer").addEventListener("click", () => {
+        const designers = members.filter((member) => {
+          return member.category === "デザイナー";
+        });
+        render(designers);
+      });
+
+      // 【Manager】マネージャーだけで絞り込む
+      document.querySelector("#Manager").addEventListener("click", () => {
+        const managers = members.filter((member) => {
+          return member.category === "マネージャー";
+        });
+        render(managers);
+      });
+
+      // 3. ページを開いた最初の瞬間は、全員を表示しておく
+      render(members);
+    </script>
+  </body>
+</html>
